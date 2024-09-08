@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories and Subcategories</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500&family=Montserrat:wght@500;600;700&family=Source+Code+Pro:wght@200&display=swap" rel="stylesheet">
+  <style>
+    /* Add any additional styling for the images here */
+    .image-gallery {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .image-gallery img {
+      width: 100px;
+      height: auto;
+      margin-right: 5px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 30%;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #dddddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+
+  </style>
+</head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+  <!-- Define Handlebars templates -->
+  <script id="ads-template" type="text/x-handlebars-template">
+    <ul id="adsList">
+      {{#each adsData}}
+        <li>
+          <h3>{{title}}</h3>
+          <p>{{description}}</p>
+          <p>Τιμη: {{cost}}</p>
+          <h4>Features:</h4>          
+          <div class="image-gallery">
+            <!-- Iterate through the images array -->
+            {{#each images}}
+              <img src="https://wiki-ads.onrender.com/{{this}}" alt="Image" width="300">
+            {{/each}}
+          </div>
+          <div class="features-table">
+            <table>
+            {{#each features}}
+              <tr>
+                <td>{{this}}</td>
+              </tr>
+            {{/each}}
+            </table>
+          </div>
+        </li>
+      {{/each}}
+    </ul>
+  </script>
+
+  <script>
+
+    // Fetch advertisements based on subcategory ID
+    const subcategoryId = new URLSearchParams(window.location.search).get('id');
+    const adsData = []; // Array to store the ads data
+
+    fetch(`https://wiki-ads.onrender.com/ads?subcategory=${subcategoryId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch ads');
+        }
+        return response.json();
+      })
+      .then(ads => {
+        ads.forEach(ad => {
+            // Split the features string into an array
+            ad.features = ad.features.split(';');
+          });
+
+          adsData.push(...ads); // Store the modified ads data in the array
+          renderAds(adsData); // Call function to render ads using Handlebars
+      })
+      .catch(error => {
+        console.error('There was a problem fetching the ads:', error);
+      });
+
+    // Function to render ads using Handlebars
+    function renderAds(adsData) {
+      const adsTemplate = document.getElementById('ads-template').innerHTML;
+      const compiledTemplate = Handlebars.compile(adsTemplate);
+      const container = document.createElement('div');
+      container.innerHTML = compiledTemplate({ adsData });
+      document.body.appendChild(container);
+    }
+  </script>
+</body>
+</html>

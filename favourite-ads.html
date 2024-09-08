@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500&family=Montserrat:wght@500;600;700&family=Source+Code+Pro:wght@200&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script id="ads-template" type="text/x-handlebars-template">
+        <h1>Favourite Ads for {{userId}}</h1>
+
+        {{#each favourites}}
+        <li>
+          <h3>{{add_title}}</h3>
+          <p>{{add_desc}}</p>
+          <p>Τιμη: {{add_cost}} €</p>
+          <img src="https://wiki-ads.onrender.com/{{add_image}}" width="300">
+        </li>
+      {{/each}}
+
+    </script>
+
+    <script>
+      function getUserIdFromURL() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.get('username');
+      }
+
+      const userId = getUserIdFromURL();
+
+      let users = []; // Initialize an empty array to store fetched data
+      let favourites = []
+      fetch('./users.json')
+        .then((response) => response.json())
+        .then((json) => {
+          users = json; // Assign the fetched JSON data to the 'users' variable
+          const user = users.find(user => user.username === userId);
+          console.log(user.favourites)
+          favourites = user.favourites
+
+          // Proceed with the rest of your logic that depends on 'users' data
+          const adsTemplate = document.getElementById('ads-template').innerHTML;
+          const compiledTemplate = Handlebars.compile(adsTemplate);
+          const container = document.createElement('div');
+          container.innerHTML = compiledTemplate({ userId , favourites});
+          document.body.appendChild(container);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+*{
+    font-family: 'Manrope', sans-serif;
+    list-style: none;
+}
+
+body{    
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: azure;
+    color: rgb(37, 55, 65);
+}
+
+#categoriesList{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#categoriesList img{
+    margin-left: 30%;
+}
+
+.subcategoriesList{
+    margin-top: 20%;
+    box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.25);
+    width: 300px;
+    padding: 10px;
+}
+
+.subcategoriesList li{
+    margin-left: 15%;
+}
+h3{
+    font-size: 40px;
+    color: rgb(30, 35, 50);
+    margin-left: 10%;
+}
+
+h4 {
+    color: rgb(37, 55, 65);
+}
+
+h4:hover{
+    color: rgb(21, 138, 79);
+    transition: 0.2s;
+}
+
+a{
+    text-decoration: none;
+}
+
+.plus-button {
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
